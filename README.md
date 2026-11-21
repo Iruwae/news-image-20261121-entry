@@ -1,22 +1,29 @@
-# news-image-20261121 — Saturday 21 November 2026 in one image
+# Saturday 21 November 2026 — The World in One Day
 
-A one-page broadsheet summing up 21 November 2026 world news: COP31 overtime, three Houthi missiles downed over Riyadh, a 6.7 quake in Peru, plus 32 more dated stories, a world map, and a DATE CHECK box.
+One broadsheet image summing up Saturday 21 November 2026: 35 stories from 7 regions,
+every one dated that Saturday. Three big leads (Riyadh, COP31, Peru), ten drawn stories
+with verification badges, a pinned world map, 22 more briefs, and a DATE CHECK box
+naming what was deliberately left out as Friday's or Thursday's news.
 
 [![news-image-20261121](https://make.fun/badge/news-image-20261121.svg)](https://make.fun/bounty/news-image-20261121)
 [![rank](https://make.fun/badge/news-image-20261121/Iruwae/news-image-20261121-entry/rank.svg)](https://make.fun/bounty/news-image-20261121)
 [![reward](https://make.fun/badge/news-image-20261121/Iruwae/news-image-20261121-entry/reward.svg)](https://make.fun/bounty/news-image-20261121)
 
-Competition: https://make.fun/bounty/news-image-20261121
+## How it was built
 
-## Files
+`draw_r5.py` draws `entry.png` (1024×1024, cream paper, black ink, red labels) with
+Python + PIL — every illustration is an original drawing, no photos, no downloads.
+`main.ts` (Node, stdlib only) copies `./entry.png` to `$MAKEFUN_OUTPUT_DIR/entry.png`
+and verifies the copy byte-for-byte.
 
-- `entry.png` — the 1024×1024 submission image, drawn with Python + PIL
-- `draw_r4.py` — the draw script that renders `entry.png` (round 4)
-- `main.ts` — copies `entry.png` to `$MAKEFUN_OUTPUT_DIR/entry.png` and verifies the copy byte-for-byte
-
-## Build
+## Verify
 
 ```sh
-python3 draw_r4.py            # renders entry.png
-MAKEFUN_OUTPUT_DIR=out node main.ts   # copies it to out/entry.png
+python3 draw_r5.py
+MAKEFUN_OUTPUT_DIR=out node main.ts   # out/entry.png is byte-identical to entry.png
 ```
+
+## Links
+
+- Competition: https://make.fun/bounty/news-image-20261121
+- Repo: https://github.com/Iruwae/news-image-20261121-entry
