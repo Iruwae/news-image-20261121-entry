@@ -1,20 +1,22 @@
-// Entry point for the news-image-20261121 make.fun submission.
-// Copies the pre-rendered front page (entry.png, drawn by draw.py) into
-// the grader's output directory and proves the copy is byte-identical,
-// so what gets graded is exactly the image reviewed in this repo.
+// Round 2 entry runner for make.fun news-image-20261121.
+// Copies ./entry.png into the grader output directory and verifies the
+// copy byte-for-byte, so the graded file is exactly the drawn image.
 import { copyFileSync, mkdirSync, readFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const repoRoot = resolve(import.meta.dirname);
-const source = join(repoRoot, "entry.png");
-const outDir = resolve(process.env.MAKEFUN_OUTPUT_DIR ?? "/output");
+const here = dirname(fileURLToPath(import.meta.url));
+const src = join(here, "entry.png");
+const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
 mkdirSync(outDir, { recursive: true });
-const target = join(outDir, "entry.png");
-copyFileSync(source, target);
+const dest = join(outDir, "entry.png");
 
-const before = readFileSync(source);
-const after = readFileSync(target);
-if (!before.equals(after)) {
-  throw new Error("entry.png copy mismatch: bytes differ after copy");
+copyFileSync(src, dest);
+
+const original = readFileSync(src);
+const copied = readFileSync(dest);
+if (!original.equals(copied)) {
+  console.error(`entry.png copy mismatch: ${src} -> ${dest}`);
+  process.exit(1);
 }
-console.log(`entry.png -> ${target} (${after.length} bytes, verified identical)`);
+console.log(`entry.png (${original.length} bytes) copied to ${dest}, byte-identical`);
