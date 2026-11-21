@@ -1,22 +1,22 @@
-// Round 2 entry runner for make.fun news-image-20261121.
-// Copies ./entry.png into the grader output directory and verifies the
-// copy byte-for-byte, so the graded file is exactly the drawn image.
+// Round 3 entry runner for make.fun news-image-20261121.
+// Copies the pre-rendered ./entry.png into the grader's output directory
+// and verifies the copy byte-for-byte, so a bad copy can never pass silently.
 import { copyFileSync, mkdirSync, readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join, resolve } from "node:path";
 
-const here = dirname(fileURLToPath(import.meta.url));
-const src = join(here, "entry.png");
-const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+const here = resolve(import.meta.dirname);
+const source = join(here, "entry.png");
+const outDir = resolve(process.env.MAKEFUN_OUTPUT_DIR ?? "/output");
 mkdirSync(outDir, { recursive: true });
-const dest = join(outDir, "entry.png");
+const target = join(outDir, "entry.png");
+copyFileSync(source, target);
 
-copyFileSync(src, dest);
-
-const original = readFileSync(src);
-const copied = readFileSync(dest);
-if (!original.equals(copied)) {
-  console.error(`entry.png copy mismatch: ${src} -> ${dest}`);
-  process.exit(1);
+const before = readFileSync(source);
+if (before.length < 10_000 || before.subarray(0, 8).toString("hex") !== "89504e470d0a1a0a") {
+  throw new Error(`entry.png does not look like a PNG (${before.length} bytes)`);
 }
-console.log(`entry.png (${original.length} bytes) copied to ${dest}, byte-identical`);
+const after = readFileSync(target);
+if (!before.equals(after)) {
+  throw new Error(`entry.png copy mismatch: ${before.length} vs ${after.length} bytes`);
+}
+console.log(`entry.png -> ${target} (${after.length} bytes, verified identical)`);
